@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import GithubContext from "./context/GithubContext";
+import { Switch, BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Navbar from "./layout/Navbar";
+import Home from "./components/Home";
+import Signin from "./components/Signin";
+import Signup from "./components/Signup";
+import PageNotFound from "./components/PageNotFound";
+import Footer from "./layout/Footer";
 
-function App() {
+//firebase
+import firebase from "firebase/app";
+import "firebase/auth";
+
+import firebaseConfig from "./config/firebaseConfig";
+//init firebase
+firebase.initializeApp(firebaseConfig);
+const App = () => {
+  const [user, setUser] = useState(null);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <GithubContext.Provider value={{ user, setUser }}>
+        <Navbar />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/signin" component={Signin} />
+          <Route exact path="/signup" component={Signup} />
+          <Route exact path="*" component={PageNotFound} />
+        </Switch>
+        <Footer />
+      </GithubContext.Provider>
+    </Router>
   );
-}
+};
 
 export default App;
